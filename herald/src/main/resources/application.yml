@@ -1,0 +1,11 @@
+spring:
+    application:
+        name: herald
+    datasource:
+        url: jdbc:postgresql://ep-dark-credit-ahhgh8r3-pooler.c-3.us-east-1.aws.neon.tech/neondb?user=neondb_owner&password=npg_4SlqGTaxFXH5&sslmode=require&channelBinding=require
+        driver-class-name: org.postgresql.Driver
+    flyway:
+        enabled: true
+    jpa:
+        hibernate:
+            ddl-auto: validate

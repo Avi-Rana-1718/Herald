@@ -14,13 +14,13 @@ public class NotificationService {
        
       UUID requestId = UUID.randomUUID();
         // push to kafka based on type
-    for(NotificationTypeEnum type: request.type()) {
-        if(type.equals(NotificationTypeEnum.EMAIL)) {
+        for(NotificationTypeEnum type: request.type()) {
+            if(type.equals(NotificationTypeEnum.EMAIL)) {
 
-        } else if(type.equals(NotificationTypeEnum.SMS)) {
+            } else if(type.equals(NotificationTypeEnum.SMS)) {
 
+            }
         }
-    }
         
         TriggerNotificationResponse response = new TriggerNotificationResponse(requestId.toString());
         return response;
