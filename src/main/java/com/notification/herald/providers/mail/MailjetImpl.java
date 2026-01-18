@@ -20,7 +20,7 @@ public class MailjetImpl implements MailProvider {
 
     private final WebClient mailClient;
 
-    MailjetImpl(@Qualifier("MailClient") WebClient mailClient) {
+    MailjetImpl(@Qualifier("mailClient") WebClient mailClient) {
         this.mailClient = mailClient;
     }
 

@@ -1,5 +1,6 @@
 package com.notification.herald.configurations;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -8,12 +9,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class WebConfiguration {
 
-    private String mailjetUsername = "97fcfb69034b8f6aced283f42863ff1d";
-    private String mailjetPassword = "";
+    @Value("${mail.mailjet.username}")
+    private String mailjetUsername;
+    @Value("${mail.mailjet.password}")
+    private String mailjetPassword;
+    @Value("${mail.mailjet.url}")
+    private String mailjetBaseURL;
 
     @Bean
-   public WebClient MailClient(WebClient.Builder builder) {
-       return builder.baseUrl("https://api.mailjet.com/v3.1/").defaultHeaders(headers->{
+   public WebClient mailClient(WebClient.Builder builder) {
+       return builder.baseUrl(mailjetBaseURL).defaultHeaders(headers->{
            headers.setBasicAuth(mailjetUsername, mailjetPassword);
            headers.setContentType(MediaType.APPLICATION_JSON);
        }).build();
