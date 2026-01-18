@@ -1,6 +1,10 @@
-package main.java.com.notification.herald.providers.mail;
+package com.notification.herald.providers.mail;
 
-public abstract class MailProvider {
+import com.notification.herald.dto.mail.MailRequestDto;
+import com.notification.herald.dto.notification.TriggerNotificationDto;
+import reactor.core.publisher.Mono;
+
+public interface MailProvider {
     // return requestId
-   public abstract String sendMail(MailRequestDto request);
+    Mono<String> sendMail(MailRequestDto request);
 }

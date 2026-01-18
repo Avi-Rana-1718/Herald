@@ -1,4 +1,4 @@
-package main.java.com.notification.herald.enums;
+package com.notification.herald.enums;
 
 public enum MailProviderEnum {
     MAILJET("mailjet");

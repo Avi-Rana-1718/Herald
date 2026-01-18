@@ -1,5 +1,7 @@
 package com.notification.herald.controllers;
 
+import com.notification.herald.dto.mail.MailRequestDto;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.notification.herald.dto.notification.TriggerNotificationDto;
@@ -20,9 +22,10 @@ public class NotificationController {
         this.notificationService = notificationService; 
     }
     
-    @PostMapping("trigger")
-    public TriggerNotificationResponse postMethodName(@RequestBody TriggerNotificationDto request) {
-        return this.notificationService.triggerNotification(request);
+    @PostMapping("trigger/email")
+    public String postMethodName(@Valid @RequestBody MailRequestDto request) throws Exception {
+        System.out.println(this.notificationService.triggerEmail(request));
+        return "asa";
     }
     
 }

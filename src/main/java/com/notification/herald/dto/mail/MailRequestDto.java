@@ -1,5 +1,4 @@
-import main.java.com.notification.herald.dto.mail.MailRequestFrom;
-import main.java.com.notification.herald.dto.mail.MailRequestTo;
+package com.notification.herald.dto.mail;
 
 public record MailRequestDto(
         String Subject,
