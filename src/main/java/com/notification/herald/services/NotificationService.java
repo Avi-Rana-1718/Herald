@@ -1,15 +1,14 @@
 package com.notification.herald.services;
 
-import java.util.UUID;
-
+import com.notification.herald.dto.ResponseDto;
 import com.notification.herald.dto.mail.MailRequestDto;
 import com.notification.herald.enums.MailProviderEnum;
 import com.notification.herald.utils.MailUtil;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.notification.herald.dto.notification.TriggerNotificationDto;
-import com.notification.herald.dto.notification.TriggerNotificationResponse;
-import com.notification.herald.enums.NotificationTypeEnum;
+import java.util.UUID;
 
 @Service
 public class NotificationService {
@@ -20,9 +19,12 @@ public class NotificationService {
         this.mailUtil = mailUtil;
     }
 
-    public String triggerEmail(MailRequestDto request) throws Exception {
-       
+    public ResponseEntity<ResponseDto> triggerEmail(MailRequestDto request) throws Exception {
       UUID requestId = UUID.randomUUID();
-      return mailUtil.sendMail(request, MailProviderEnum.MAILJET);
+      ResponseDto response = new ResponseDto(requestId);
+
+      String providerRequestId = mailUtil.sendMail(request, MailProviderEnum.MAILJET);
+
+      return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

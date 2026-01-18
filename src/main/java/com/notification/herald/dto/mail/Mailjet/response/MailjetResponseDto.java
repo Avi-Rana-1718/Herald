@@ -1,6 +1,4 @@
-package com.notification.herald.dto.mail.Mailjet;
-
-import lombok.Getter;
+package com.notification.herald.dto.mail.Mailjet.response;
 
 import java.util.List;
 

@@ -1,15 +1,10 @@
 package com.notification.herald.utils;
 
 import com.notification.herald.dto.mail.MailRequestDto;
-import com.notification.herald.dto.notification.TriggerNotificationDto;
 import com.notification.herald.enums.MailProviderEnum;
 import com.notification.herald.providers.mail.MailProvider;
-import com.notification.herald.providers.mail.MailjetImpl;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
-import java.rmi.ServerException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +27,6 @@ public class MailUtil {
             throw new Exception("Invalid mail provider!");
         }
 
-        String requestId = mailProvider.sendMail(request).block();
-        return requestId;
+        return mailProvider.sendMail(request).block();
     }
 }
