@@ -27,8 +27,7 @@ public class MailjetImpl implements MailProvider {
     @Override
     public Mono<String> sendMail(MailRequestDto request) {
         MailjetRequestDto requestDto = this.transform(request);
-        System.out.println("Request payload");
-        System.out.println(requestDto.toString());
+
         return mailClient.post().uri("send").contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(requestDto).retrieve().bodyToMono(MailjetResponseDto.class)
                 .map(response -> {

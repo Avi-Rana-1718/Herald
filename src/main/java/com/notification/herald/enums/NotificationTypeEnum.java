@@ -1,13 +1,8 @@
 package com.notification.herald.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum NotificationTypeEnum {
-    SMS("sms"), EMAIL("email");
-    
-    private final String type;
-
-    NotificationTypeEnum(String type) {
-        this.type = type;
-    }
-
-    public String getType() { return type; }
+    SMS, EMAIL
 }
