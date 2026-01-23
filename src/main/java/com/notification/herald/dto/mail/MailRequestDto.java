@@ -1,5 +1,6 @@
 package com.notification.herald.dto.mail;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
@@ -12,9 +13,13 @@ public record MailRequestDto(
         @NotNull
         String HTMLPart,
         @NotNull
-        List<MailAddress> to,
-        List<MailAddress> cc,
-        List<MailAddress> bcc,
+        @Valid
+        List<@Valid MailAddress> to,
+        @Valid
+        List<@Valid MailAddress> cc,
+        @Valid
+        List<@Valid MailAddress> bcc,
         @NotNull
+        @Valid
         MailAddress from
 ) {}
