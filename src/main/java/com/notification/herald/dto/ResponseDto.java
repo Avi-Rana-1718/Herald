@@ -1,5 +1,6 @@
 package com.notification.herald.dto;
 
 public record ResponseDto(
-    Object data
+    Object data,
+    int status
 ) {}

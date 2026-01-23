@@ -9,6 +9,7 @@ import com.notification.herald.enums.NotificationTypeEnum;
 import com.notification.herald.repository.NotificationRepository;
 import com.notification.herald.utils.MailUtil;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -28,11 +29,12 @@ public class NotificationService {
 
     public ResponseEntity<ResponseDto> triggerEmail(MailRequestDto request) throws Exception {
       UUID requestId = UUID.randomUUID();
-      ResponseDto response = new ResponseDto(requestId);
+      ResponseDto response = new ResponseDto(requestId, HttpStatus.CREATED.value());
 
       String referenceId = mailUtil.sendMail(request, MailProviderEnum.MAILJET);
       NotificationEntity notification = new NotificationEntity(requestId, referenceId, requestId, NotificationTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED, 0);
       notificationRepository.save(notification);
-      return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+      return new ResponseEntity<>(response, HttpStatusCode.valueOf(response.status()));
     }
 }
