@@ -28,6 +28,6 @@ public class MailUtil {
             throw new BadRequestException("Invalid mail provider!");
         }
 
-        return mailProvider.sendMail(request).block();
+        return mailProvider.sendMail(request);
     }
 }

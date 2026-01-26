@@ -7,34 +7,26 @@ import com.notification.herald.dto.mail.Mailjet.response.MailjetResponseDto;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
+import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class MailjetImpl implements MailProvider {
 
-    private final WebClient mailClient;
+    private final RestClient mailClient;
 
-    MailjetImpl(@Qualifier("mailClient") WebClient mailClient) {
+    MailjetImpl(@Qualifier("mailClient") RestClient mailClient) {
         this.mailClient = mailClient;
     }
 
     @Override
-    public Mono<String> sendMail(MailRequestDto request) {
+    public String sendMail(MailRequestDto request) {
         MailjetRequestDto requestDto = this.transform(request);
 
-        return mailClient.post().uri("send").contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(requestDto).retrieve().bodyToMono(MailjetResponseDto.class)
-                .map(response -> {
-                    if(Objects.nonNull(response) && Objects.nonNull(response.Messages()) && !response.Messages().isEmpty()) {
-                        return response.Messages().getFirst().To().getFirst().MessageID();
-                    }
-                    throw new RuntimeException("No Message ID in response");
-                });
+        MailjetResponseDto response = mailClient.post().uri("send").contentType(MediaType.APPLICATION_JSON).body(requestDto).retrieve().body(MailjetResponseDto.class);
+        return response.Messages().getFirst().To().getFirst().MessageID();
     };
 
     @Override
