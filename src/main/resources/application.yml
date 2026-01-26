@@ -11,3 +11,8 @@ spring:
     jpa:
         hibernate:
             ddl-auto: validate
+mail:
+  mailjet:
+    username: ${MAILJET_APIKEY}
+    password: ${MAILJET_SECRET}
+    url: "https://api.mailjet.com/v3.1/"

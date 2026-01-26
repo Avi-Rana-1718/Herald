@@ -1,6 +1,6 @@
 package com.notification.herald.dto;
 
-public record ResponseDto(
-    Object data,
+public record ErrorDto (
+    String data,
     int status
 ) {}
