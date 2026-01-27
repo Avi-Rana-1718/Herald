@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 @Configuration
 public class WebConfiguration {
@@ -17,7 +17,7 @@ public class WebConfiguration {
     private String mailjetBaseURL;
 
     @Bean
-   public WebClient mailClient(WebClient.Builder builder) {
+   public RestClient mailClient(RestClient.Builder builder) {
        return builder.baseUrl(mailjetBaseURL).defaultHeaders(headers->{
            headers.setBasicAuth(mailjetUsername, mailjetPassword);
            headers.setContentType(MediaType.APPLICATION_JSON);
