@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Objects;
 
@@ -23,6 +24,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto> exceptionHandler(MethodArgumentNotValidException ex) {
         String errorMessage = Objects.nonNull(ex.getBindingResult().getFieldError())?ex.getBindingResult().getFieldError().getDefaultMessage():ex.getLocalizedMessage();
         ErrorDto errorDto = new ErrorDto(errorMessage, HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorDto, HttpStatusCode.valueOf(errorDto.status()));
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorDto> exceptionHandler(ResponseStatusException ex) {
+        ErrorDto errorDto = new ErrorDto(ex.getMessage(), ex.getStatusCode().value());
         return new ResponseEntity<>(errorDto, HttpStatusCode.valueOf(errorDto.status()));
     }
 }
