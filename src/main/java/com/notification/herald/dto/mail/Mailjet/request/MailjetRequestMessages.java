@@ -7,10 +7,7 @@ import java.util.List;
 public record MailjetRequestMessages(
         MailAddress From,
         List<MailAddress> To,
-        List<MailAddress> Cc,
-        List<MailAddress> Bcc,
         String Subject,
-        String TextPart,
         String HTMLPart
 ) {
 }

@@ -30,6 +30,9 @@ spring:
         value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 mail:
   mailjet:
-    username: ${MAILJET_APIKEY}
-    password: ${MAILJET_SECRET}
-    url: "https://api.mailjet.com/v3.1/"
+    mailjetUsername: ${MAILJET_APIKEY}
+    mailjetPassword: ${MAILJET_SECRET}
+    mailjetBaseURL: "https://api.mailjet.com/v3.1/"
+    email : budgr@avirana.com
+    name: Avi Rana
+

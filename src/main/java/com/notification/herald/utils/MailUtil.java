@@ -25,7 +25,7 @@ public class MailUtil {
         MailProvider mailProvider = providerList.get(providerName);
 
         if(Objects.isNull(mailProvider)) {
-            throw new BadRequestException("Invalid mail provider!");
+            throw new BadRequestException("Invalid email provider!");
         }
 
         return mailProvider.sendMail(request);

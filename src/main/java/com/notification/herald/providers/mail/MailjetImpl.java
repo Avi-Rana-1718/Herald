@@ -1,26 +1,27 @@
 package com.notification.herald.providers.mail;
 
+import com.notification.herald.configurations.MailjetConfiguration;
+import com.notification.herald.dto.mail.MailAddress;
 import com.notification.herald.dto.mail.MailRequestDto;
 import com.notification.herald.dto.mail.Mailjet.request.MailjetRequestDto;
 import com.notification.herald.dto.mail.Mailjet.request.MailjetRequestMessages;
 import com.notification.herald.dto.mail.Mailjet.response.MailjetResponseDto;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MailjetImpl implements MailProvider {
 
     private final RestClient mailClient;
+    private final MailjetConfiguration mailjetConfiguration;
 
-    MailjetImpl(@Qualifier("mailClient") RestClient mailClient) {
-        this.mailClient = mailClient;
-    }
 
     @Override
     public String sendMail(MailRequestDto request) {
@@ -36,7 +37,16 @@ public class MailjetImpl implements MailProvider {
     }
 
     private MailjetRequestDto transform(MailRequestDto requestDto) {
-        MailjetRequestMessages message = new MailjetRequestMessages(requestDto.from(), requestDto.to(), requestDto.cc(), requestDto.bcc(), requestDto.subject(), requestDto.textPart(), requestDto.HTMLPart());
+        List<MailAddress> mailAddresses =
+            Optional.ofNullable(requestDto.to())
+                .orElse(List.of())
+                .stream()
+                .filter(u -> u.email() != null)
+                .map(u -> new MailAddress(u.email(), u.name()))
+                .toList();
+
+        MailjetRequestMessages message = new MailjetRequestMessages(new MailAddress(mailjetConfiguration.email(),
+            mailjetConfiguration.name()), mailAddresses, requestDto.subject(), requestDto.content());
         List<MailjetRequestMessages> messages = new ArrayList<>();
         messages.add(message);
         return new MailjetRequestDto(messages);

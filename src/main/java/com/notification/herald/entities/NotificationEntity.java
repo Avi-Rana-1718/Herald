@@ -1,7 +1,7 @@
 package com.notification.herald.entities;
 
 import com.notification.herald.enums.NotificationStatusEnum;
-import com.notification.herald.enums.NotificationTypeEnum;
+import com.notification.herald.enums.NotifTypeEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +25,7 @@ public class NotificationEntity {
 
     @Id
     @Column(name ="notification_id",unique = true)
-    UUID notificationId;
+    String notificationId;
 
     @Column(name = "reference_id", unique = true)
     String referenceId;
@@ -36,7 +36,7 @@ public class NotificationEntity {
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "notificationType")
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    NotificationTypeEnum type;
+    NotifTypeEnum type;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "notificationStatus")

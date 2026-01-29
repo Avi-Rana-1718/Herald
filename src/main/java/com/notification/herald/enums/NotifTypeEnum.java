@@ -3,6 +3,6 @@ package com.notification.herald.enums;
 import lombok.Getter;
 
 @Getter
-public enum NotificationTypeEnum {
+public enum NotifTypeEnum {
     SMS, EMAIL
 }
