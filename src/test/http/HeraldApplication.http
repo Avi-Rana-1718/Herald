@@ -1,0 +1,20 @@
+POST http://127.0.0.1:9500/notification
+Content-Type: application/json
+Request-Body
+
+{
+    "type": ["EMAIL"],
+    "recipients" :[{
+            "phoneNumber":"+918360990322",
+            "email": "avantika3449@gmail.com",
+            "name": "Avantika"
+            }
+],
+    "content":"Test content",
+    "subject":"Test Subject"
+}
+
+<> 2026-01-28T174028.500.json
+
+###
+
