@@ -1,7 +1,7 @@
 package com.notification.herald.entities;
 
-import com.notification.herald.enums.NotificationStatusEnum;
 import com.notification.herald.enums.NotifTypeEnum;
+import com.notification.herald.enums.NotificationStatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
