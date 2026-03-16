@@ -22,7 +22,8 @@ public class NotificationController {
     @PostMapping
     public ResponseEntity<ResponseDto> triggerNotification(@Valid @RequestBody NotifRequestDto requestDto)
     {
-        return ResponseEntity.status(200).body(notificationService.sendNotification(requestDto));
+        ResponseDto responseDto = notificationService.sendNotification(requestDto);
+        return ResponseEntity.status(responseDto.status()).body(responseDto);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.notification.herald.providers.mail;
 
-import com.notification.herald.configurations.MailjetConfiguration;
+import com.notification.herald.configurations.properties.MailjetConfiguration;
 import com.notification.herald.dto.mail.MailAddress;
 import com.notification.herald.dto.mail.MailRequestDto;
 import com.notification.herald.dto.mail.Mailjet.request.MailjetRequestDto;
@@ -30,11 +30,6 @@ public class MailjetImpl implements MailProvider {
         MailjetResponseDto response = mailClient.post().uri("send").contentType(MediaType.APPLICATION_JSON).body(requestDto).retrieve().body(MailjetResponseDto.class);
         return response.Messages().getFirst().To().getFirst().MessageID();
     };
-
-    @Override
-    public void setStatus(String requestId) {
-
-    }
 
     private MailjetRequestDto transform(MailRequestDto requestDto) {
         List<MailAddress> mailAddresses =
