@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class NotificationController {
 
-    private NotificationService notificationService;
+    private final NotificationService notificationService;
 
 
     @PostMapping

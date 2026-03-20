@@ -51,13 +51,13 @@ public class OtpService {
     }
 
     public ResponseDto validateOtp(OtpValidateDto requestDto) {
-        String hashedOtp = redisTemplate.opsForValue().get("otp:"+requestDto.requestId());
+        String hashedOtp = redisTemplate.opsForValue().get("otp:"+requestDto.getRequestId());
 
         if(Objects.isNull(hashedOtp)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No OTP found for this requestId");
         }
 
-        if(!BCrypt.checkpw(requestDto.otp(), hashedOtp)) {
+        if(!BCrypt.checkpw(requestDto.getOtp(), hashedOtp)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid OTP provided");
         }
 
