@@ -2,7 +2,6 @@ package com.notification.herald.utils;
 
 import com.notification.herald.dto.sms.SMSRequestDto;
 import com.notification.herald.enums.SMSProviderEnum;
-import com.notification.herald.providers.mail.MailProvider;
 import com.notification.herald.providers.sms.SMSProvider;
 import org.springframework.stereotype.Service;
 

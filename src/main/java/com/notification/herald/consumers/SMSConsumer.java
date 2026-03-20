@@ -1,7 +1,6 @@
 package com.notification.herald.consumers;
 
 import com.notification.herald.dto.EventDto;
-import com.notification.herald.dto.sms.SMSRequestDto;
 import com.notification.herald.repository.NotificationRepository;
 import com.notification.herald.utils.SMSUtil;
 import lombok.RequiredArgsConstructor;

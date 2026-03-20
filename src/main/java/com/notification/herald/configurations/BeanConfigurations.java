@@ -16,7 +16,7 @@ public class BeanConfigurations {
   private final TwilioConfiguration twilioConfiguration;
 
   @Bean
-  public RestClient mailClient(RestClient.Builder builder) {
+  public RestClient mailjetClient(RestClient.Builder builder) {
     return builder.baseUrl(mailjetConfiguration.baseUrl()).defaultHeaders(headers->{
       headers.setBasicAuth(mailjetConfiguration.username(), mailjetConfiguration.password());
       headers.setContentType(MediaType.APPLICATION_JSON);

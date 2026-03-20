@@ -4,5 +4,6 @@ public record OtpRequestDto(
        String toMobile,
        String toEmail,
        String content,
-       String recipientName
+       String recipientName,
+       Integer expiresIn
 ) {}
