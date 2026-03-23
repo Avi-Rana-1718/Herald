@@ -18,18 +18,19 @@ import org.springframework.stereotype.Service;
 public class EmailConsumer {
 
     private final MailUtil mailUtil;
+    private final CommonPersistanceService commonPersistanceService;
 
     private final String FAILED_REFERENCE = "FAILED_REFERENCE";
 
     @KafkaListener(topics = "EMAIL")
-    public void emailConsumer(EventDto request, @Header(KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt) throws Exception {
+    public void emailConsumer(MailRequestDto request, @Header(KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt) throws Exception {
         String requestId = request.requestId();
-        MailRequestDto payload = new MailRequestDto(request.subject(),request.content(),request.recipients());
+
          try {
-             String referenceId = mailUtil.sendMail(payload, MailProviderEnum.MAILJET);
-             CommonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED);
+             String referenceId = mailUtil.sendMail(request, MailProviderEnum.MAILJET);
+             commonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED);
          } catch (Exception e) {
-            CommonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.FAILED);
+            commonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.FAILED);
              throw e;
          }
     }

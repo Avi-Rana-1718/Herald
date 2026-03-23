@@ -35,13 +35,9 @@ public class MailjetImpl implements MailProvider {
     }
 
     private MailjetRequestDto transform(MailRequestDto requestDto) {
-        List<MailAddress> mailAddresses =
-            Optional.ofNullable(requestDto.to())
-                .orElse(List.of())
-                .stream()
-                .filter(u -> u.email() != null)
-                .map(u -> new MailAddress(u.email(), u.name()))
-                .toList();
+        List<MailAddress> mailAddresses = new ArrayList<>();
+        MailAddress mailAddress = new MailAddress(requestDto.to().email(), requestDto.to().name());
+        mailAddresses.add(mailAddress);
 
         MailjetRequestMessages message = new MailjetRequestMessages(new MailAddress(mailjetConfiguration.email(),
             mailjetConfiguration.name()), mailAddresses, requestDto.subject(), requestDto.content());

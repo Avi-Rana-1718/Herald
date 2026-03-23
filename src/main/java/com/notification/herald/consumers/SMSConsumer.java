@@ -18,19 +18,19 @@ import org.springframework.stereotype.Service;
 public class SMSConsumer {
 
     private final SMSUtil smsUtil;
+    private final CommonPersistanceService commonPersistanceService;
 
     private final String FAILED_REFERENCE = "FAILED_REFERENCE";
 
     @KafkaListener(topics = "SMS")
-    public void smsConsumer(EventDto request, @Header(value = KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt) throws Exception {
+    public void smsConsumer(SMSRequestDto request, @Header(value = KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt) throws Exception {
         String requestId = request.requestId();
-        SMSRequestDto smsRequestDto = new SMSRequestDto(request.recipients().getFirst().phoneNumber(), request.content());
 
         try {
-            String referenceId = smsUtil.sendSMS(smsRequestDto, SMSProviderEnum.TWILIO);
-            CommonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
+            String referenceId = smsUtil.sendSMS(request, SMSProviderEnum.TWILIO);
+            commonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
         } catch (Exception e) {
-            CommonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.FAILED);
+            commonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.FAILED);
             throw e;
         }
     }

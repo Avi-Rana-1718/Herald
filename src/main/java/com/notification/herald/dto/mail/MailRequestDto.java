@@ -12,5 +12,6 @@ public record MailRequestDto(
         @NotNull
         String content,
         @Valid
-        List<@Valid UserDto> to
+        UserDto to,
+        String requestId
 ) {}

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/notification")
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ public class NotificationController {
 
 
     @PostMapping
-    public ResponseEntity<ResponseDto> triggerNotification(@Valid @RequestBody NotifRequestDto requestDto)
+    public ResponseEntity<ResponseDto> triggerNotification(@Valid @RequestBody List<NotifRequestDto> requestDto)
     {
         ResponseDto responseDto = notificationService.sendNotification(requestDto);
         return ResponseEntity.status(responseDto.status()).body(responseDto);

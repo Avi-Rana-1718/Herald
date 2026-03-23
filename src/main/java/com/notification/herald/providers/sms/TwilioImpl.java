@@ -25,7 +25,6 @@ public class TwilioImpl implements SMSProvider {
     @Override
     public String sendSMS(SMSRequestDto request) {
         TwilioRequestDto requestDto = this.transform(request);
-
         TwilioResponseDto response = smsClient.post().body(toFormData(requestDto)).retrieve().body(TwilioResponseDto.class);
         return response.sid();
     }

@@ -5,8 +5,7 @@ import java.util.UUID;
 
 public record EventDto (
     String requestId,
-    UUID user,
-    List<UserDto> recipients,
+    UserDto recipients,
     String content,
     String subject
 ) {}

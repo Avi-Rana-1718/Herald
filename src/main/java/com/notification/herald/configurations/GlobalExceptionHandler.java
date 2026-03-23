@@ -1,6 +1,8 @@
 package com.notification.herald.configurations;
 
 import com.notification.herald.dto.ErrorDto;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResponseStatusException.class)
     public ResponseEntity<ErrorDto> exceptionHandler(ResponseStatusException ex) {
         ErrorDto errorDto = new ErrorDto(ex.getMessage(), ex.getStatusCode().value());
+        return new ResponseEntity<>(errorDto, HttpStatusCode.valueOf(errorDto.status()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException .class)
+    public ResponseEntity<ErrorDto> exceptionHandler(ConstraintViolationException ex) {
+        ErrorDto errorDto = new ErrorDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(errorDto, HttpStatusCode.valueOf(errorDto.status()));
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorDto> exceptionHandler(ValidationException ex) {
+        ErrorDto errorDto = new ErrorDto(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(errorDto, HttpStatusCode.valueOf(errorDto.status()));
     }
 }

@@ -30,18 +30,25 @@ public class OtpService {
 
     public ResponseDto requestOtp(OtpRequestDto requestDto) {
         String otp = this.generateOtp();
-        List<NotifTypeEnum> notifType = new ArrayList<>();
-        List<UserDto> userDtoList = new ArrayList<>();
+        String recipientName = requestDto.recipientName();
+        String email = requestDto.toEmail();
+        String phoneNumber = requestDto.toMobile();
+        String content = requestDto.content().replace("${OTP}", otp);
+        String subject = "OTP request";
+
+        List<NotifRequestDto> notifRequest = new ArrayList<>();
 
         if(Objects.nonNull(requestDto.toEmail())) {
-            String recipientName = requestDto.recipientName();
-            notifType.add(NotifTypeEnum.EMAIL);
-            UserDto userDto = new UserDto(recipientName, requestDto.toEmail(), null);
-            userDtoList.add(userDto);
+             NotifRequestDto notifRequestDto = new NotifRequestDto(NotifTypeEnum.EMAIL, null, email, recipientName, content, subject);
+             notifRequest.add(notifRequestDto);
         }
 
-        NotifRequestDto notifRequestDto = new NotifRequestDto(notifType, userDtoList, requestDto.content().replace("${OTP}", otp), "OTP requested");
-        String requestId = notificationService.sendNotification(notifRequestDto).data().toString();
+        if(Objects.nonNull(requestDto.toMobile())) {
+           NotifRequestDto notifRequestDto = new NotifRequestDto(NotifTypeEnum.SMS, phoneNumber, null, null, content, null);
+           notifRequest.add(notifRequestDto);
+        }
+
+        List<String> requestId = (List<String>) notificationService.sendNotification(notifRequest).data();
 
         String hashedOtp = BCrypt.hashpw(otp, BCrypt.gensalt(5));
         redisTemplate.opsForValue().set("otp:"+requestId, hashedOtp, Duration.ofSeconds(requestDto.expiresIn()));
@@ -60,6 +67,8 @@ public class OtpService {
         if(!BCrypt.checkpw(requestDto.getOtp(), hashedOtp)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid OTP provided");
         }
+
+        redisTemplate.delete("otp:"+requestDto.getRequestId());
 
 
         return new ResponseDto("Authorized", HttpStatus.OK.value());
