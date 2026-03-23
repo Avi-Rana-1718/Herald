@@ -3,7 +3,9 @@ package com.notification.herald.services;
 import com.notification.herald.dto.EventDto;
 import com.notification.herald.dto.NotifRequestDto;
 import com.notification.herald.dto.ResponseDto;
+import com.notification.herald.entities.NotificationEntity;
 import com.notification.herald.enums.NotifTypeEnum;
+import com.notification.herald.repository.NotificationRepository;
 import com.notification.herald.utils.RequestUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ public class NotificationService {
 
 
     private final KafkaProviderService kafkaProviderService;
+    private final NotificationRepository notificationRepository;
 
   public ResponseDto sendNotification(NotifRequestDto notifRequestDto) {
 
@@ -29,5 +32,11 @@ public class NotificationService {
       }
 
       return new ResponseDto(requestId, HttpStatus.CREATED.value());
+    }
+
+    public ResponseDto getNotification(String requestId) {
+        NotificationEntity notification = notificationRepository.findByID(requestId);
+
+        return new ResponseDto(notification, HttpStatus.OK.value());
     }
 }

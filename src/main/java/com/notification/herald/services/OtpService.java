@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -43,25 +44,25 @@ public class OtpService {
         String requestId = notificationService.sendNotification(notifRequestDto).data().toString();
 
         String hashedOtp = BCrypt.hashpw(otp, BCrypt.gensalt(5));
-        redisTemplate.opsForValue().set("otp:has:"+requestId, hashedOtp);
+        redisTemplate.opsForValue().set("otp:"+requestId, hashedOtp, Duration.ofSeconds(requestDto.expiresIn()));
 
 
         return new ResponseDto(requestId, HttpStatus.OK.value());
     }
 
     public ResponseDto validateOtp(OtpValidateDto requestDto) {
-        String hashedOtp = redisTemplate.opsForValue().get("otp:hash:"+requestDto.requestId());
+        String hashedOtp = redisTemplate.opsForValue().get("otp:"+requestDto.getRequestId());
 
         if(Objects.isNull(hashedOtp)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No OTP found for this requestId");
         }
 
-        if(!BCrypt.checkpw(requestDto.otp(), hashedOtp)) {
+        if(!BCrypt.checkpw(requestDto.getOtp(), hashedOtp)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid OTP provided");
         }
 
 
-        return new ResponseDto("Authorized", HttpStatus.UNAUTHORIZED.value());
+        return new ResponseDto("Authorized", HttpStatus.OK.value());
     }
 
     private String generateOtp() {

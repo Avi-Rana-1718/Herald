@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public enum NotificationStatusEnum {
-    FAILED, REQUESTED, QUEUED;
+    FAILED, REQUESTED, QUEUED
 }

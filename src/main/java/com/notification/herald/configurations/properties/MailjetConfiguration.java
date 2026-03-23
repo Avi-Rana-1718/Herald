@@ -1,13 +1,13 @@
-package com.notification.herald.configurations;
+package com.notification.herald.configurations.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "mail.mailjet")
 public record MailjetConfiguration(
 
-    String mailjetUsername,
-    String mailjetPassword,
-    String mailjetBaseURL,
+    String username,
+    String password,
+    String baseUrl,
     String email,
     String name
 ) {

@@ -1,38 +1,57 @@
 server:
   port: 9500
+elastic:
+  apm:
+    service-name: Harold
+    server-url: http://localhost:8200
+    environment: dev
+    log-level: info
+    application-packages: com.notification
+    instrument: true
+    trace-methods: com.notification.*
 spring:
-    application:
-        name: herald
-    datasource:
-        url: jdbc:postgresql://ep-dark-credit-ahhgh8r3-pooler.c-3.us-east-1.aws.neon.tech/neondb?user=neondb_owner&password=npg_4SlqGTaxFXH5&sslmode=require&channelBinding=require
-        driver-class-name: org.postgresql.Driver
-    flyway:
-        enabled: true
-        validate-migration-naming: true
-        validate-on-migrate: true
-    jpa:
-        hibernate:
-            ddl-auto: validate
-    kafka:
-      bootstrap-servers: localhost:9092
-      consumer:
-        group-id: my-consumer-group
-        auto-offset-reset: latest
-        key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-        value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-        properties:
-          spring:
-            json:
-              trusted:
-                packages: '*'
-      producer:
-        key-serializer: org.apache.kafka.common.serialization.StringSerializer
-        value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  application:
+    name: herald
+  datasource:
+    url: jdbc:postgresql://ep-dark-credit-ahhgh8r3-pooler.c-3.us-east-1.aws.neon.tech/neondb?user=neondb_owner&password=npg_4SlqGTaxFXH5&sslmode=require&channelBinding=require
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    validate-migration-naming: true
+    validate-on-migrate: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  redis:
+    host: localhost
+    port: 6379
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-consumer-group
+      auto-offset-reset: latest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: '*'
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    listener:
+      ack-mode: MANUAL_IMMEDIATE
 mail:
   mailjet:
-    mailjetUsername: ${MAILJET_APIKEY}
-    mailjetPassword: ${MAILJET_SECRET}
-    mailjetBaseURL: "https://api.mailjet.com/v3.1/"
-    email : budgr@avirana.com
+    username: ${MAILJET_APIKEY}
+    password: ${MAILJET_SECRET}
+    baseURL: "https://api.mailjet.com/v3.1/"
+    email: budgr@avirana.com
     name: Avi Rana
-
+sms:
+  twilio:
+    baseUrl: ${TWILIO_BASEURL}
+    username: ${TWILIO_USERNAME}
+    password: ${TWILIO_PASSWORD}
+    serviceId: ${TWILIO_SERVICE_ID}
