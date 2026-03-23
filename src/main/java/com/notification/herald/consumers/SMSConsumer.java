@@ -2,6 +2,8 @@ package com.notification.herald.consumers;
 
 import com.notification.herald.dto.EventDto;
 import com.notification.herald.dto.sms.SMSRequestDto;
+import com.notification.herald.enums.NotifTypeEnum;
+import com.notification.herald.enums.NotificationStatusEnum;
 import com.notification.herald.enums.SMSProviderEnum;
 import com.notification.herald.services.CommonPersistanceService;
 import com.notification.herald.utils.SMSUtil;
@@ -26,9 +28,9 @@ public class SMSConsumer {
 
         try {
             String referenceId = smsUtil.sendSMS(smsRequestDto, SMSProviderEnum.TWILIO);
-            CommonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1);
+            CommonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
         } catch (Exception e) {
-            CommonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1);
+            CommonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.FAILED);
             throw e;
         }
     }

@@ -3,6 +3,8 @@ package com.notification.herald.consumers;
 import com.notification.herald.dto.EventDto;
 import com.notification.herald.dto.mail.MailRequestDto;
 import com.notification.herald.enums.MailProviderEnum;
+import com.notification.herald.enums.NotifTypeEnum;
+import com.notification.herald.enums.NotificationStatusEnum;
 import com.notification.herald.services.CommonPersistanceService;
 import com.notification.herald.utils.MailUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +27,9 @@ public class EmailConsumer {
         MailRequestDto payload = new MailRequestDto(request.subject(),request.content(),request.recipients());
          try {
              String referenceId = mailUtil.sendMail(payload, MailProviderEnum.MAILJET);
-             CommonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1);
+             CommonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED);
          } catch (Exception e) {
-            CommonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1);
+            CommonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.FAILED);
              throw e;
          }
     }
