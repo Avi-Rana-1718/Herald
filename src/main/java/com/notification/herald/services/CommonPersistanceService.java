@@ -13,15 +13,15 @@ public class CommonPersistanceService {
 
     static NotificationRepository notificationRepository;
 
-   public static void saveOrUpdateNotification(String requestId, String referenceId, Integer deliveryAttempt) {
+   public static void saveOrUpdateNotification(String requestId, String referenceId, Integer deliveryAttempt,NotifTypeEnum type, NotificationStatusEnum status) {
        NotificationEntity notification = notificationRepository.findByID(requestId);
 
        if(Objects.isNull(notification)) {
-           notification = new NotificationEntity(requestId, referenceId, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED, deliveryAttempt-1);
+           notification = new NotificationEntity(requestId, referenceId, type, status, deliveryAttempt-1);
        } else {
            notification.setRetryCount(deliveryAttempt);
            notification.setReferenceId(referenceId);
-           notification.setStatus(NotificationStatusEnum.REQUESTED);
+           notification.setStatus(status);
        }
 
        notificationRepository.save(notification);
