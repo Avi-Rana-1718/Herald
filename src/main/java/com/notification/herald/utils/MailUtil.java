@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class MailUtil {
 
-    private HashMap<String, MailProvider> providerList;
+    private final HashMap<String, MailProvider> providerList;
 
     MailUtil(List<MailProvider> providerList) {
         this.providerList = (HashMap<String, MailProvider>) providerList.stream().collect(Collectors.toMap(provider->provider.getClass().getSimpleName().toLowerCase().replace("impl", ""), provider ->provider));

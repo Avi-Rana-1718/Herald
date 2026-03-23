@@ -20,7 +20,6 @@ public class SMSUtil {
     public String sendSMS(SMSRequestDto request, SMSProviderEnum provider) {
         String providerName = provider.getValue().toLowerCase();
         SMSProvider smsProvider = providerList.get(providerName);
-
         return smsProvider.sendSMS(request);
     }
 }

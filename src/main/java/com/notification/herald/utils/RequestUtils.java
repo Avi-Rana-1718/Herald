@@ -5,7 +5,7 @@ import java.util.UUID;
 public class RequestUtils {
 
   public static String generateRequestId(){
-      return UUID.randomUUID().toString() + "-" + System.currentTimeMillis();
+      return UUID.randomUUID() + "-" + System.currentTimeMillis();
   }
 
 }

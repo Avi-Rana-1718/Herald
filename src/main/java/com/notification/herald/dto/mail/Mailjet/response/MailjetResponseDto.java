@@ -6,4 +6,3 @@ public record MailjetResponseDto(
         List<MailjetMessages> Messages
 ) {}
 
-;

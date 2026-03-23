@@ -9,7 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 public class HeraldApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(HeraldApplication.class, args);
+//        ElasticApmAttacher.attach();
+    SpringApplication.run(HeraldApplication.class, args);
 	}
 
 }

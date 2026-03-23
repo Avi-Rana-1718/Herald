@@ -32,7 +32,7 @@ public class MailjetImpl implements MailProvider {
 
         MailjetResponseDto response = mailClient.post().uri("send").contentType(MediaType.APPLICATION_JSON).body(requestDto).retrieve().body(MailjetResponseDto.class);
         return response.Messages().getFirst().To().getFirst().MessageID();
-    };
+    }
 
     private MailjetRequestDto transform(MailRequestDto requestDto) {
         List<MailAddress> mailAddresses =
