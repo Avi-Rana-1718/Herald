@@ -84,10 +84,9 @@ class NotificationControllerTest {
     }
 
     @Test
-    void getNotification_missingRequestId_returns500() throws Exception {
-        // MissingServletRequestParameterException is caught by the generic Exception handler → 500
+    void getNotification_missingRequestId_returns400() throws Exception {
         mockMvc.perform(get("/notification"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
