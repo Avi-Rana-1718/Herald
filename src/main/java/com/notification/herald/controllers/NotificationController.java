@@ -4,6 +4,7 @@ import com.notification.herald.dto.NotifRequestDto;
 import com.notification.herald.dto.ResponseDto;
 import com.notification.herald.services.NotificationService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class NotificationController {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDto> getNotification(@RequestParam("requestId") String requestId) {
+    public ResponseEntity<ResponseDto> getNotification(@Valid @NotBlank @RequestParam("requestId") String requestId) {
         ResponseDto responseDto = notificationService.getNotification(requestId);
         return ResponseEntity.status(responseDto.status()).body(responseDto);
     }
