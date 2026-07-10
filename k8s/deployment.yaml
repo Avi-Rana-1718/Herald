@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: herald
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: herald
+  template:
+    metadata:
+      labels:
+        app: herald
+    spec:
+      containers:
+        - name: herald
+          image: herald:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 250m
+            limits:
+              cpu: 500m
+              memory: 512Mi
