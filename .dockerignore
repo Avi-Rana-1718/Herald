@@ -1,0 +1,27 @@
+# Build output
+target/
+
+# Version control & CI
+.git/
+.gitignore
+.github/
+
+# IDE / editor
+.idea/
+*.iml
+.vscode/
+
+# Docker & compose (not needed inside the build context)
+Dockerfile
+.dockerignore
+docker-compose.yaml
+
+# Docs & k8s manifests
+*.md
+kubernetes/
+k8s/
+sealed-secrets/
+
+# Local env
+*.env
+.env
