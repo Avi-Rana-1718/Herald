@@ -4,5 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum NotifTypeEnum {
-    SMS, EMAIL
+  SMS,
+  EMAIL
 }

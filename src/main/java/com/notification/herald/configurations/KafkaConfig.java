@@ -10,23 +10,22 @@ import org.springframework.util.backoff.FixedBackOff;
 @Configuration
 public class KafkaConfig {
 
-    @Bean
-    public DefaultErrorHandler errorHandler() {
-        return new DefaultErrorHandler(new FixedBackOff(1000L, 3));
-    }
+  @Bean
+  public DefaultErrorHandler errorHandler() {
+    return new DefaultErrorHandler(new FixedBackOff(1000L, 3));
+  }
 
-    @Bean()
-    public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
-            ConsumerFactory<Object, Object> consumerFactory,
-            DefaultErrorHandler defaultErrorHandler) {
+  @Bean()
+  public ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
+      ConsumerFactory<Object, Object> consumerFactory, DefaultErrorHandler defaultErrorHandler) {
 
-        ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
-                new ConcurrentKafkaListenerContainerFactory<>();
+    ConcurrentKafkaListenerContainerFactory<Object, Object> factory =
+        new ConcurrentKafkaListenerContainerFactory<>();
 
-        factory.setConsumerFactory(consumerFactory);
-        factory.setCommonErrorHandler(defaultErrorHandler);
-        factory.getContainerProperties().setDeliveryAttemptHeader(true);
+    factory.setConsumerFactory(consumerFactory);
+    factory.setCommonErrorHandler(defaultErrorHandler);
+    factory.getContainerProperties().setDeliveryAttemptHeader(true);
 
-        return factory;
-    }
+    return factory;
+  }
 }

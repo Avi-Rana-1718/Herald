@@ -1,15 +1,15 @@
 package com.notification.herald.enums;
 
 public enum MailProviderEnum {
-    MAILJET("mailjet");
+  MAILJET("mailjet");
 
-    private final String value;
+  private final String value;
 
-    MailProviderEnum(String value) {
-        this.value = value;
-    }
+  MailProviderEnum(String value) {
+    this.value = value;
+  }
 
-    public String getValue() {
-        return value;
-    }
+  public String getValue() {
+    return value;
+  }
 }

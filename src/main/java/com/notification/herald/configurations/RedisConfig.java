@@ -13,37 +13,38 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.redis.host}")
-    private String host;
-    @Value("${spring.redis.port}")
-    private Integer port;
+  @Value("${spring.redis.host}")
+  private String host;
 
-    @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
+  @Value("${spring.redis.port}")
+  private Integer port;
 
-        JedisClientConfiguration clientConfiguration = JedisClientConfiguration.builder().usePooling().poolConfig(jedisPoolConfig()).build();
+  @Bean
+  public JedisConnectionFactory jedisConnectionFactory() {
+    RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(host, port);
 
-        return new JedisConnectionFactory(configuration, clientConfiguration);
-    }
+    JedisClientConfiguration clientConfiguration =
+        JedisClientConfiguration.builder().usePooling().poolConfig(jedisPoolConfig()).build();
 
-    @Bean
-    public JedisPoolConfig jedisPoolConfig() {
-        JedisPoolConfig poolConfig = new JedisPoolConfig();
-        poolConfig.setMaxTotal(5);
-        poolConfig.setMaxIdle(2);
-        poolConfig.setMinIdle(1);
-        poolConfig.setTestOnBorrow(true);
-        return poolConfig;
-    }
+    return new JedisConnectionFactory(configuration, clientConfiguration);
+  }
 
-    @Bean
-    public RedisTemplate<String, String> redisTemplate() {
-        RedisTemplate<String, String> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
-        template.setKeySerializer(new StringRedisSerializer());
-        template.setValueSerializer(new StringRedisSerializer());
-        return template;
-    }
+  @Bean
+  public JedisPoolConfig jedisPoolConfig() {
+    JedisPoolConfig poolConfig = new JedisPoolConfig();
+    poolConfig.setMaxTotal(5);
+    poolConfig.setMaxIdle(2);
+    poolConfig.setMinIdle(1);
+    poolConfig.setTestOnBorrow(true);
+    return poolConfig;
+  }
 
+  @Bean
+  public RedisTemplate<String, String> redisTemplate() {
+    RedisTemplate<String, String> template = new RedisTemplate<>();
+    template.setConnectionFactory(jedisConnectionFactory());
+    template.setKeySerializer(new StringRedisSerializer());
+    template.setValueSerializer(new StringRedisSerializer());
+    return template;
+  }
 }

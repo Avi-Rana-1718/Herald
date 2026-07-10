@@ -1,6 +1,5 @@
 package com.notification.herald.consumers;
 
-import com.notification.herald.dto.EventDto;
 import com.notification.herald.dto.sms.SMSRequestDto;
 import com.notification.herald.enums.NotifTypeEnum;
 import com.notification.herald.enums.NotificationStatusEnum;
@@ -17,21 +16,33 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SMSConsumer {
 
-    private final SMSUtil smsUtil;
-    private final CommonPersistanceService commonPersistanceService;
+  private final SMSUtil smsUtil;
+  private final CommonPersistanceService commonPersistanceService;
 
-    private final String FAILED_REFERENCE = "FAILED_REFERENCE";
+  private final String FAILED_REFERENCE = "FAILED_REFERENCE";
 
-    @KafkaListener(topics = "SMS")
-    public void smsConsumer(SMSRequestDto request, @Header(value = KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt) throws Exception {
-        String requestId = request.requestId();
+  @KafkaListener(topics = "SMS")
+  public void smsConsumer(
+      SMSRequestDto request, @Header(value = KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt)
+      throws Exception {
+    String requestId = request.requestId();
 
-        try {
-            String referenceId = smsUtil.sendSMS(request, SMSProviderEnum.TWILIO);
-            commonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
-        } catch (Exception e) {
-            commonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.SMS, NotificationStatusEnum.FAILED);
-            throw e;
-        }
+    try {
+      String referenceId = smsUtil.sendSMS(request, SMSProviderEnum.TWILIO);
+      commonPersistanceService.saveOrUpdateNotification(
+          requestId,
+          referenceId,
+          deliveryAttempt - 1,
+          NotifTypeEnum.SMS,
+          NotificationStatusEnum.REQUESTED);
+    } catch (Exception e) {
+      commonPersistanceService.saveOrUpdateNotification(
+          requestId,
+          FAILED_REFERENCE,
+          deliveryAttempt - 1,
+          NotifTypeEnum.SMS,
+          NotificationStatusEnum.FAILED);
+      throw e;
     }
+  }
 }

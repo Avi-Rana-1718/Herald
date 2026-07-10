@@ -1,5 +1,7 @@
 package com.notification.herald.configurations;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -8,30 +10,27 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @ExtendWith(MockitoExtension.class)
 class KafkaConfigTest {
 
-    @Mock
-    ConsumerFactory<Object, Object> consumerFactory;
+  @Mock ConsumerFactory<Object, Object> consumerFactory;
 
-    private final KafkaConfig kafkaConfig = new KafkaConfig();
+  private final KafkaConfig kafkaConfig = new KafkaConfig();
 
-    @Test
-    void errorHandler_shouldBeNonNull() {
-        DefaultErrorHandler handler = kafkaConfig.errorHandler();
+  @Test
+  void errorHandler_shouldBeNonNull() {
+    DefaultErrorHandler handler = kafkaConfig.errorHandler();
 
-        assertThat(handler).isNotNull();
-    }
+    assertThat(handler).isNotNull();
+  }
 
-    @Test
-    void kafkaListenerContainerFactory_shouldEnableDeliveryAttemptHeader() {
-        DefaultErrorHandler handler = kafkaConfig.errorHandler();
+  @Test
+  void kafkaListenerContainerFactory_shouldEnableDeliveryAttemptHeader() {
+    DefaultErrorHandler handler = kafkaConfig.errorHandler();
 
-        ConcurrentKafkaListenerContainerFactory<?, ?> factory =
-                kafkaConfig.kafkaListenerContainerFactory(consumerFactory, handler);
+    ConcurrentKafkaListenerContainerFactory<?, ?> factory =
+        kafkaConfig.kafkaListenerContainerFactory(consumerFactory, handler);
 
-        assertThat(factory.getContainerProperties().isDeliveryAttemptHeader()).isTrue();
-    }
+    assertThat(factory.getContainerProperties().isDeliveryAttemptHeader()).isTrue();
+  }
 }

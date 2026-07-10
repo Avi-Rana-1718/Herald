@@ -7,8 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OtpValidateDto {
-    @NotBlank(message = "RequestId is mandatory")
-    String requestId;
-    @NotBlank(message = "OTP is mandatory")
-    String otp;
+  @NotBlank(message = "RequestId is mandatory")
+  String requestId;
+
+  @NotBlank(message = "OTP is mandatory")
+  String otp;
 }

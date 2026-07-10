@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/otp")
 public class OtpController {
 
-    private final OtpService otpService;
+  private final OtpService otpService;
 
-    @PostMapping("request")
-    ResponseEntity<ResponseDto> requestOtp(@Valid @RequestBody OtpRequestDto requestDto) {
-        ResponseDto responseDto = this.otpService.requestOtp(requestDto);
-        return ResponseEntity.status(responseDto.status()).body(responseDto);
-    }
+  @PostMapping("request")
+  ResponseEntity<ResponseDto> requestOtp(@Valid @RequestBody OtpRequestDto requestDto) {
+    ResponseDto responseDto = this.otpService.requestOtp(requestDto);
+    return ResponseEntity.status(responseDto.status()).body(responseDto);
+  }
 
-    @PostMapping("/validate")
-    ResponseEntity<ResponseDto> validateOtp(@Valid @RequestBody OtpValidateDto requestDto) {
-        ResponseDto responseDto = this.otpService.validateOtp(requestDto);
-        return ResponseEntity.status(responseDto.status()).body(responseDto);
-    }
+  @PostMapping("/validate")
+  ResponseEntity<ResponseDto> validateOtp(@Valid @RequestBody OtpValidateDto requestDto) {
+    ResponseDto responseDto = this.otpService.validateOtp(requestDto);
+    return ResponseEntity.status(responseDto.status()).body(responseDto);
+  }
 }

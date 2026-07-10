@@ -4,8 +4,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "sms.twilio")
 public record TwilioConfiguration(
-        String username,
-        String password,
-        String serviceId,
-        String baseUrl
-) {}
+    String username, String password, String serviceId, String baseUrl) {}

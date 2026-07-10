@@ -8,9 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @SpringBootApplication
 public class HeraldApplication {
 
-	public static void main(String[] args) {
-//        ElasticApmAttacher.attach();
+  public static void main(String[] args) {
+    //        ElasticApmAttacher.attach();
     SpringApplication.run(HeraldApplication.class, args);
-	}
-
+  }
 }

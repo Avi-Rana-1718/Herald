@@ -21,23 +21,23 @@ import org.hibernate.type.SqlTypes;
 @AllArgsConstructor
 public class NotificationEntity {
 
-    @Id
-    @Column(name ="notification_id",unique = true)
-    String notificationId;
+  @Id
+  @Column(name = "notification_id", unique = true)
+  String notificationId;
 
-    @Column(name = "reference_id", unique = true)
-    String referenceId;
+  @Column(name = "reference_id", unique = true)
+  String referenceId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "notificationType")
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    NotifTypeEnum type;
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "notificationType")
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  NotifTypeEnum type;
 
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "notificationStatus")
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    NotificationStatusEnum status;
+  @Enumerated(EnumType.STRING)
+  @Column(columnDefinition = "notificationStatus")
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  NotificationStatusEnum status;
 
-    @Column(name = "retry_count")
-    Integer retryCount;
+  @Column(name = "retry_count")
+  Integer retryCount;
 }

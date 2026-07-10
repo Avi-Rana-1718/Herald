@@ -17,17 +17,27 @@ public class BeanConfigurations {
 
   @Bean
   public RestClient mailjetClient(RestClient.Builder builder) {
-    return builder.baseUrl(mailjetConfiguration.baseUrl()).defaultHeaders(headers->{
-      headers.setBasicAuth(mailjetConfiguration.username(), mailjetConfiguration.password());
-      headers.setContentType(MediaType.APPLICATION_JSON);
-    }).build();
+    return builder
+        .baseUrl(mailjetConfiguration.baseUrl())
+        .defaultHeaders(
+            headers -> {
+              headers.setBasicAuth(
+                  mailjetConfiguration.username(), mailjetConfiguration.password());
+              headers.setContentType(MediaType.APPLICATION_JSON);
+            })
+        .build();
   }
 
   @Bean
-    public RestClient twilioClient(RestClient.Builder builder) {
-      return builder.baseUrl(twilioConfiguration.baseUrl()).defaultHeaders(httpHeaders -> {
-          httpHeaders.setBasicAuth(twilioConfiguration.username(), twilioConfiguration.password());
-          httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-      }).build();
+  public RestClient twilioClient(RestClient.Builder builder) {
+    return builder
+        .baseUrl(twilioConfiguration.baseUrl())
+        .defaultHeaders(
+            httpHeaders -> {
+              httpHeaders.setBasicAuth(
+                  twilioConfiguration.username(), twilioConfiguration.password());
+              httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            })
+        .build();
   }
 }

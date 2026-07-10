@@ -1,6 +1,5 @@
 package com.notification.herald.consumers;
 
-import com.notification.herald.dto.EventDto;
 import com.notification.herald.dto.mail.MailRequestDto;
 import com.notification.herald.enums.MailProviderEnum;
 import com.notification.herald.enums.NotifTypeEnum;
@@ -17,21 +16,33 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EmailConsumer {
 
-    private final MailUtil mailUtil;
-    private final CommonPersistanceService commonPersistanceService;
+  private final MailUtil mailUtil;
+  private final CommonPersistanceService commonPersistanceService;
 
-    private final String FAILED_REFERENCE = "FAILED_REFERENCE";
+  private final String FAILED_REFERENCE = "FAILED_REFERENCE";
 
-    @KafkaListener(topics = "EMAIL")
-    public void emailConsumer(MailRequestDto request, @Header(KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt) throws Exception {
-        String requestId = request.requestId();
+  @KafkaListener(topics = "EMAIL")
+  public void emailConsumer(
+      MailRequestDto request, @Header(KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt)
+      throws Exception {
+    String requestId = request.requestId();
 
-         try {
-             String referenceId = mailUtil.sendMail(request, MailProviderEnum.MAILJET);
-             commonPersistanceService.saveOrUpdateNotification(requestId, referenceId, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED);
-         } catch (Exception e) {
-            commonPersistanceService.saveOrUpdateNotification(requestId, FAILED_REFERENCE, deliveryAttempt-1, NotifTypeEnum.EMAIL, NotificationStatusEnum.FAILED);
-             throw e;
-         }
+    try {
+      String referenceId = mailUtil.sendMail(request, MailProviderEnum.MAILJET);
+      commonPersistanceService.saveOrUpdateNotification(
+          requestId,
+          referenceId,
+          deliveryAttempt - 1,
+          NotifTypeEnum.EMAIL,
+          NotificationStatusEnum.REQUESTED);
+    } catch (Exception e) {
+      commonPersistanceService.saveOrUpdateNotification(
+          requestId,
+          FAILED_REFERENCE,
+          deliveryAttempt - 1,
+          NotifTypeEnum.EMAIL,
+          NotificationStatusEnum.FAILED);
+      throw e;
     }
+  }
 }
