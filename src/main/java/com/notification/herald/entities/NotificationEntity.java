@@ -28,6 +28,9 @@ public class NotificationEntity {
   @Column(name = "reference_id", unique = true)
   String referenceId;
 
+  @Column(name = "sent_to", nullable = false)
+  String sentTo;
+
   @Enumerated(EnumType.STRING)
   @Column(columnDefinition = "notificationType")
   @JdbcTypeCode(SqlTypes.NAMED_ENUM)

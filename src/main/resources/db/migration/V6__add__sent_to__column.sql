@@ -1,0 +1,1 @@
+ALTER TABLE notifications ADD COLUMN sent_to VARCHAR(255) NOT NULL;

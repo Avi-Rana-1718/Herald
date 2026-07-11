@@ -1,11 +1,10 @@
 package com.notification.herald.consumers;
 
-import com.notification.herald.dto.sms.SMSRequestDto;
+import com.notification.herald.dto.inapp.InAppRequestDto;
 import com.notification.herald.enums.NotifTypeEnum;
 import com.notification.herald.enums.NotificationStatusEnum;
-import com.notification.herald.enums.SMSProviderEnum;
+import com.notification.herald.providers.inapp.InAppProvider;
 import com.notification.herald.services.CommonPersistanceService;
-import com.notification.herald.utils.SMSUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -14,35 +13,36 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SMSConsumer {
+public class InAppConsumer {
 
-  private final SMSUtil smsUtil;
+  private final InAppProvider inAppProvider;
   private final CommonPersistanceService commonPersistanceService;
 
   private final String FAILED_REFERENCE = "FAILED_REFERENCE";
 
-  @KafkaListener(topics = "SMS")
-  public void smsConsumer(
-      SMSRequestDto request, @Header(value = KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt)
+  @KafkaListener(topics = "IN_APP")
+  public void inAppConsumer(
+      InAppRequestDto request,
+      @Header(value = KafkaHeaders.DELIVERY_ATTEMPT) Integer deliveryAttempt)
       throws Exception {
     String requestId = request.requestId();
 
     try {
-      String referenceId = smsUtil.sendSMS(request, SMSProviderEnum.TWILIO);
+      String referenceId = inAppProvider.sendNotification(request);
       commonPersistanceService.saveOrUpdateNotification(
           requestId,
           referenceId,
-          request.toMobile(),
+          request.uuid(),
           deliveryAttempt - 1,
-          NotifTypeEnum.SMS,
+          NotifTypeEnum.IN_APP,
           NotificationStatusEnum.REQUESTED);
     } catch (Exception e) {
       commonPersistanceService.saveOrUpdateNotification(
           requestId,
           FAILED_REFERENCE,
-          request.toMobile(),
+          request.uuid(),
           deliveryAttempt - 1,
-          NotifTypeEnum.SMS,
+          NotifTypeEnum.IN_APP,
           NotificationStatusEnum.FAILED);
       throw e;
     }

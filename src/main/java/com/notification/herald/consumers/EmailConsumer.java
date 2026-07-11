@@ -32,6 +32,7 @@ public class EmailConsumer {
       commonPersistanceService.saveOrUpdateNotification(
           requestId,
           referenceId,
+          request.to().email(),
           deliveryAttempt - 1,
           NotifTypeEnum.EMAIL,
           NotificationStatusEnum.REQUESTED);
@@ -39,6 +40,7 @@ public class EmailConsumer {
       commonPersistanceService.saveOrUpdateNotification(
           requestId,
           FAILED_REFERENCE,
+          request.to().email(),
           deliveryAttempt - 1,
           NotifTypeEnum.EMAIL,
           NotificationStatusEnum.FAILED);
