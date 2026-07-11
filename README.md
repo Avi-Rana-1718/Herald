@@ -102,18 +102,6 @@ src/main/java/com/notification/herald/
 | `SMS`    | `SMSConsumer`   |
 | `IN_APP` | `InAppConsumer` |
 
-## Database Migrations
-
-Flyway migrations live in `src/main/resources/db/migration/`:
-
-- `V1` — create notifications table
-- `V2` — change `notification_id` to `VARCHAR(255)`
-- `V3` — drop `user_id` column
-- `V4` — create templates table
-- `V5` — add in-app notification type
-- `V6` — add `sent_to` column
-- `V7` — create in-app inbox table
-
 ## Getting Started
 
 ### Prerequisites
