@@ -1,0 +1,35 @@
+meta {
+  name: Get Notification Status
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/notification?requestId={{requestId}}
+  body: none
+  auth: none
+}
+
+params:query {
+  requestId: {{requestId}}
+}
+
+tests {
+  test("returns 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Returns the stored notification for a request id.
+
+  The row is written by the Kafka consumer, not by the send call, so `data` is
+  `null` until the event has been processed — a `200` with `null` is normal
+  right after a send.
+
+  Status values are `REQUESTED` (provider accepted it — the success state),
+  `FAILED`, and `QUEUED` (DB default, never written by code). There is no
+  `SUCCESS`. Retry budget is 4 attempts, 1s apart.
+
+  `requestId` is auto-populated by the Send Email / SMS / In-App requests.
+}

@@ -1,0 +1,51 @@
+meta {
+  name: Trigger Email Template
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/template/trigger/email
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "templateName": "order-confirmation",
+    "langCode": "en",
+    "toEmail": "{{toEmail}}",
+    "toName": "{{toName}}",
+    "variables": {
+      "customerName": "Avi",
+      "orderId": "ORD-1042"
+    }
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("requestId", res.getBody().data[0]);
+  }
+}
+
+tests {
+  test("returns 201 with a request id", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}
+
+docs {
+  Renders the active EMAIL template for (templateName, langCode) and queues it.
+
+  Failure modes:
+  - `404` — no template for that name/type/langCode
+  - `409` — template is inactive
+  - `400` — a `{{placeholder}}` in the template has no value in `variables`
+
+  On success behaves exactly like **Send Email** — returns the request id.
+}

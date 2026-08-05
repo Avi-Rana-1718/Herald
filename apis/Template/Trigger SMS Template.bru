@@ -1,0 +1,44 @@
+meta {
+  name: Trigger SMS Template
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/template/trigger/sms
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "templateName": "order-confirmation",
+    "langCode": "en",
+    "toMobile": "{{toMobile}}",
+    "variables": {
+      "customerName": "Avi",
+      "orderId": "ORD-1042"
+    }
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("requestId", res.getBody().data[0]);
+  }
+}
+
+tests {
+  test("returns 201 with a request id", function () {
+    expect(res.getStatus()).to.equal(201);
+  });
+}
+
+docs {
+  Renders the active SMS template for (templateName, langCode) and queues it
+  via Twilio. Same 404 / 409 / 400 failure modes as the email trigger.
+}

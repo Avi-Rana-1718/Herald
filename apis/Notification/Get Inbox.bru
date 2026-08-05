@@ -1,0 +1,27 @@
+meta {
+  name: Get Inbox
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/notification/inapp?uuid={{uuid}}
+  body: none
+  auth: none
+}
+
+params:query {
+  uuid: {{uuid}}
+}
+
+tests {
+  test("returns 200", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Returns the unread in-app notifications for a user.
+
+  `uuid` is required and must be non-blank.
+}

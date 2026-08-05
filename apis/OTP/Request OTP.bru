@@ -1,0 +1,55 @@
+meta {
+  name: Request OTP
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/otp/request
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "email": {
+      "toEmail": "{{toEmail}}",
+      "recipientName": "{{toName}}"
+    },
+    "sms": {
+      "toMobile": "{{toMobile}}"
+    },
+    "content": "Your Herald OTP is ${OTP}. It expires in 5 minutes.",
+    "expiresIn": 300
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("otpRequestId", res.getBody().data);
+  }
+}
+
+tests {
+  test("returns 200 with an otp id", function () {
+    expect(res.getStatus()).to.equal(200);
+    expect(res.getBody().data).to.be.a("string");
+  });
+}
+
+docs {
+  Generates a 5-digit OTP, BCrypt-hashes it into Redis under `otp:<otpId>`
+  with `expiresIn` seconds TTL, and delivers it over the given channels.
+
+  - At least one of `email` / `sms` must be present (else 400).
+  - `content` is mandatory; the literal `${OTP}` placeholder is substituted
+    with the generated code.
+  - `expiresIn` is mandatory, in seconds.
+  - One code is issued per request regardless of channel count.
+
+  Response `data` is the otp id — stored into `otpRequestId` for **Validate OTP**.
+}

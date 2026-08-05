@@ -1,0 +1,35 @@
+meta {
+  name: Request OTP - SMS only
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/otp/request
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "sms": {
+      "toMobile": "{{toMobile}}"
+    },
+    "content": "Your Herald OTP is ${OTP}.",
+    "expiresIn": 300
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 200) {
+    bru.setEnvVar("otpRequestId", res.getBody().data);
+  }
+}
+
+docs {
+  Same as **Request OTP** but single-channel. `email` omitted.
+}

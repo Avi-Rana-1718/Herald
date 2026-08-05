@@ -1,0 +1,53 @@
+meta {
+  name: Create Email Template
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/template/create/email
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "templateName": "order-confirmation",
+    "langCode": "en",
+    "title": "Order {{orderId}} confirmed",
+    "content": "<p>Hi {{customerName}}, your order {{orderId}} is confirmed.</p>",
+    "variables": ["customerName", "orderId"]
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("templateId", res.getBody().data[0]);
+  }
+}
+
+tests {
+  test("returns 201 with a template id", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().data).to.be.an("array").that.is.not.empty;
+  });
+}
+
+docs {
+  Creates an EMAIL template. Version 1, active by default.
+
+  - `templateName`, `content`, `langCode`, `title` are all mandatory.
+  - `title` becomes the rendered email subject (stored in JSONB metadata).
+  - `langCode` must be one of: `en`, `es`, `fr`, `de`, `pt`, `hi`, `zh`, `ja`
+    (case-insensitive) — otherwise `400 unsupported langCode`.
+  - Duplicate (templateName, type, langCode) -> `409`.
+  - `{{placeholder}}` tokens in `title`/`content` are substituted at trigger time.
+
+  Note: the `{{...}}` tokens above are template placeholders, not Bruno vars.
+  Bruno leaves unresolved `{{name}}` untouched, so avoid naming a Bruno
+  environment variable the same as a template placeholder.
+}

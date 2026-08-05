@@ -1,0 +1,44 @@
+meta {
+  name: Create SMS Template
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/template/create/sms
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "templateName": "order-confirmation",
+    "langCode": "en",
+    "content": "Hi {{customerName}}, your order {{orderId}} is confirmed.",
+    "variables": ["customerName", "orderId"]
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("templateId", res.getBody().data[0]);
+  }
+}
+
+tests {
+  test("returns 201 with a template id", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().data).to.be.an("array").that.is.not.empty;
+  });
+}
+
+docs {
+  Creates an SMS template. No `title` — SMS has no subject.
+
+  Same uniqueness rule as the email variant: (templateName, type, langCode).
+  Since type differs, an SMS template may reuse an email template's name.
+}

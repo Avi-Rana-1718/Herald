@@ -1,0 +1,42 @@
+meta {
+  name: Send SMS
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/notification/sms
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "toMobile": "{{toMobile}}",
+    "content": "This is a test SMS from Herald."
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("requestId", res.getBody().data[0]);
+  }
+}
+
+tests {
+  test("returns 201 with a request id", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().data).to.be.an("array").that.is.not.empty;
+  });
+}
+
+docs {
+  Queues an SMS notification.
+
+  Publishes to the `SMS` Kafka topic; the consumer delivers it via Twilio.
+  `toMobile` must be in E.164 format (e.g. `+919999999999`).
+}

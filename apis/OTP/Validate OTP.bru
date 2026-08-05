@@ -1,0 +1,41 @@
+meta {
+  name: Validate OTP
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/otp/validate
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "requestId": "{{otpRequestId}}",
+    "otp": "12345"
+  }
+}
+
+tests {
+  test("returns 200 when authorized", function () {
+    expect(res.getStatus()).to.equal(200);
+  });
+}
+
+docs {
+  Validates the submitted OTP against the BCrypt hash in Redis and deletes the
+  key on success.
+
+  - `requestId` is the otp id from **Request OTP** (auto-filled via `otpRequestId`).
+  - `otp` must be pasted manually from the received email/SMS.
+
+  Responses:
+  - `200` — `"Authorized"`
+  - `404` — no OTP found for this requestId (expired or already consumed)
+  - `401` — invalid OTP
+}

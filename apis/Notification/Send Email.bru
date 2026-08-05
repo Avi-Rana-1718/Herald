@@ -1,0 +1,48 @@
+meta {
+  name: Send Email
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/notification/email
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "toEmail": "{{toEmail}}",
+    "toName": "{{toName}}",
+    "subject": "Welcome to Herald",
+    "content": "<h1>Hello</h1><p>This is a test email from Herald.</p>"
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("requestId", res.getBody().data[0]);
+  }
+}
+
+tests {
+  test("returns 201 with a request id", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().data).to.be.an("array").that.is.not.empty;
+  });
+}
+
+docs {
+  Queues an email notification.
+
+  Persists the notification with `REQUESTED` status, publishes to the `EMAIL`
+  Kafka topic, and returns the generated request id(s) in `data`.
+  The consumer then delivers it via Mailjet.
+
+  Response `data[0]` is stored into the `requestId` env var for
+  **Get Notification Status**.
+}

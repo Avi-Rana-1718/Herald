@@ -1,0 +1,43 @@
+meta {
+  name: Send In-App
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/notification/inapp
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "uuid": "{{uuid}}",
+    "title": "New message",
+    "content": "You have a new in-app notification."
+  }
+}
+
+script:post-response {
+  if (res.getStatus() === 201) {
+    bru.setEnvVar("requestId", res.getBody().data[0]);
+  }
+}
+
+tests {
+  test("returns 201 with a request id", function () {
+    expect(res.getStatus()).to.equal(201);
+    expect(res.getBody().data).to.be.an("array").that.is.not.empty;
+  });
+}
+
+docs {
+  Creates an in-app notification for the user identified by `uuid`.
+
+  All three fields (`uuid`, `title`, `content`) are `@NotBlank`.
+  Fetch it back with **Get Inbox**.
+}
