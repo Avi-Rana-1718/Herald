@@ -1,5 +1,5 @@
 server:
-  port: 9500
+  port: 6069
 elastic:
   apm:
     service-name: Harold
@@ -26,7 +26,7 @@ spring:
     host: localhost
     port: 6379
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: kafka-17d09cd1-avirana3449-ff18.c.aivencloud.com:21507
     consumer:
       group-id: my-consumer-group
       auto-offset-reset: latest
