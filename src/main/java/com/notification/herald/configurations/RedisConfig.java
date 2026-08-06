@@ -26,7 +26,10 @@ public class RedisConfig {
     JedisClientConfiguration clientConfiguration =
         JedisClientConfiguration.builder().usePooling().poolConfig(jedisPoolConfig()).build();
 
-    return new JedisConnectionFactory(configuration, clientConfiguration);
+    JedisConnectionFactory factory = new JedisConnectionFactory(configuration, clientConfiguration);
+    factory.setEarlyStartup(false);
+    factory.setAutoStartup(false);
+    return factory;
   }
 
   @Bean

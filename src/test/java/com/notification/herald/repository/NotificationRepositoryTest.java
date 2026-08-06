@@ -6,6 +6,7 @@ import com.notification.herald.entities.NotificationEntity;
 import com.notification.herald.enums.NotifTypeEnum;
 import com.notification.herald.enums.NotificationStatusEnum;
 import java.util.List;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
@@ -18,6 +19,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+@Tag("integration")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
@@ -39,7 +41,12 @@ class NotificationRepositoryTest {
   void findByID_shouldReturnEntity_whenFound() {
     NotificationEntity entity =
         new NotificationEntity(
-            "notif-id-001", "ref-001", NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED, 0);
+            "notif-id-001",
+            "ref-001",
+            "alice@example.com",
+            NotifTypeEnum.EMAIL,
+            NotificationStatusEnum.REQUESTED,
+            0);
     repository.save(entity);
 
     NotificationEntity found = repository.findByID("notif-id-001");
@@ -62,10 +69,20 @@ class NotificationRepositoryTest {
   void findByID_shouldReturnCorrectEntity_whenMultipleExist() {
     NotificationEntity smsEntity =
         new NotificationEntity(
-            "id-sms", "ref-sms", NotifTypeEnum.SMS, NotificationStatusEnum.FAILED, 3);
+            "id-sms",
+            "ref-sms",
+            "+1234567890",
+            NotifTypeEnum.SMS,
+            NotificationStatusEnum.FAILED,
+            3);
     NotificationEntity emailEntity =
         new NotificationEntity(
-            "id-email", "ref-email", NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED, 0);
+            "id-email",
+            "ref-email",
+            "alice@example.com",
+            NotifTypeEnum.EMAIL,
+            NotificationStatusEnum.REQUESTED,
+            0);
     repository.saveAll(List.of(smsEntity, emailEntity));
 
     assertThat(repository.findByID("id-sms").getType()).isEqualTo(NotifTypeEnum.SMS);

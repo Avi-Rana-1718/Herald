@@ -41,6 +41,7 @@ class EmailConsumerTest {
         .saveOrUpdateNotification(
             eq("req-abc"),
             eq("msg-ref-123"),
+            eq("alice@example.com"),
             eq(0),
             eq(NotifTypeEnum.EMAIL),
             eq(NotificationStatusEnum.REQUESTED));
@@ -52,7 +53,8 @@ class EmailConsumerTest {
 
     emailConsumer.emailConsumer(request, 3);
 
-    verify(commonPersistanceService).saveOrUpdateNotification(any(), any(), eq(2), any(), any());
+    verify(commonPersistanceService)
+        .saveOrUpdateNotification(any(), any(), any(), eq(2), any(), any());
   }
 
   @Test
@@ -66,6 +68,7 @@ class EmailConsumerTest {
         .saveOrUpdateNotification(
             eq("req-abc"),
             eq("FAILED_REFERENCE"),
+            eq("alice@example.com"),
             eq(0),
             eq(NotifTypeEnum.EMAIL),
             eq(NotificationStatusEnum.FAILED));
@@ -81,6 +84,7 @@ class EmailConsumerTest {
     }
 
     verify(commonPersistanceService, never())
-        .saveOrUpdateNotification(any(), any(), any(), any(), eq(NotificationStatusEnum.REQUESTED));
+        .saveOrUpdateNotification(
+            any(), any(), any(), any(), any(), eq(NotificationStatusEnum.REQUESTED));
   }
 }

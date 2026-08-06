@@ -29,7 +29,19 @@
 	<properties>
         <maven.compiler.parameters>true</maven.compiler.parameters>
 		<java.version>21</java.version>
+		<!-- Integration tests need Docker (Testcontainers); excluded by default.
+		     Run them with: ./mvnw test -Pintegration -->
+		<test.excludedGroups>integration</test.excludedGroups>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>integration</id>
+			<properties>
+				<test.excludedGroups/>
+			</properties>
+		</profile>
+	</profiles>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -144,6 +156,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
 					<argLine>@{argLine} -Duser.timezone=UTC</argLine>
+					<excludedGroups>${test.excludedGroups}</excludedGroups>
 				</configuration>
 			</plugin>
 			<plugin>

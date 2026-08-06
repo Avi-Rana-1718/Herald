@@ -39,6 +39,7 @@ class SMSConsumerTest {
         .saveOrUpdateNotification(
             eq("req-xyz"),
             eq("sms-sid-123"),
+            eq("+1234567890"),
             eq(0),
             eq(NotifTypeEnum.SMS),
             eq(NotificationStatusEnum.REQUESTED));
@@ -50,7 +51,8 @@ class SMSConsumerTest {
 
     smsConsumer.smsConsumer(request, 2);
 
-    verify(commonPersistanceService).saveOrUpdateNotification(any(), any(), eq(1), any(), any());
+    verify(commonPersistanceService)
+        .saveOrUpdateNotification(any(), any(), any(), eq(1), any(), any());
   }
 
   @Test
@@ -64,6 +66,7 @@ class SMSConsumerTest {
         .saveOrUpdateNotification(
             eq("req-xyz"),
             eq("FAILED_REFERENCE"),
+            eq("+1234567890"),
             eq(0),
             eq(NotifTypeEnum.SMS),
             eq(NotificationStatusEnum.FAILED));
@@ -79,6 +82,7 @@ class SMSConsumerTest {
     }
 
     verify(commonPersistanceService, never())
-        .saveOrUpdateNotification(any(), any(), any(), any(), eq(NotificationStatusEnum.REQUESTED));
+        .saveOrUpdateNotification(
+            any(), any(), any(), any(), any(), eq(NotificationStatusEnum.REQUESTED));
   }
 }

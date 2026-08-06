@@ -26,7 +26,12 @@ class NotificationServiceTest {
   void getNotification_shouldReturnWrappedEntity() {
     NotificationEntity entity =
         new NotificationEntity(
-            "req-1", "ref-1", NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED, 1);
+            "req-1",
+            "ref-1",
+            "alice@example.com",
+            NotifTypeEnum.EMAIL,
+            NotificationStatusEnum.REQUESTED,
+            1);
     when(notificationRepository.findByID("req-1")).thenReturn(entity);
 
     ResponseDto response = notificationService.getNotification("req-1");

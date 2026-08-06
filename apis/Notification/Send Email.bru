@@ -23,6 +23,10 @@ body:json {
   }
 }
 
+vars:pre-request {
+  baseUrl: http://localhost:6049
+}
+
 script:post-response {
   if (res.getStatus() === 201) {
     bru.setEnvVar("requestId", res.getBody().data[0]);
@@ -38,11 +42,11 @@ tests {
 
 docs {
   Queues an email notification.
-
+  
   Persists the notification with `REQUESTED` status, publishes to the `EMAIL`
   Kafka topic, and returns the generated request id(s) in `data`.
   The consumer then delivers it via Mailjet.
-
+  
   Response `data[0]` is stored into the `requestId` env var for
   **Get Notification Status**.
 }

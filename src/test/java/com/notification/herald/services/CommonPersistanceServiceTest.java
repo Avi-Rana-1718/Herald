@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import com.notification.herald.entities.NotificationEntity;
 import com.notification.herald.enums.NotifTypeEnum;
 import com.notification.herald.enums.NotificationStatusEnum;
+import com.notification.herald.repository.InAppNotificationRepository;
 import com.notification.herald.repository.NotificationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +21,8 @@ class CommonPersistanceServiceTest {
 
   @Mock private NotificationRepository notificationRepository;
 
+  @Mock private InAppNotificationRepository inAppNotificationRepository;
+
   @InjectMocks private CommonPersistanceService commonPersistanceService;
 
   @Test
@@ -27,7 +30,12 @@ class CommonPersistanceServiceTest {
     when(notificationRepository.findByID("req-1")).thenReturn(null);
 
     commonPersistanceService.saveOrUpdateNotification(
-        "req-1", "ref-abc", 1, NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED);
+        "req-1",
+        "ref-abc",
+        "alice@example.com",
+        1,
+        NotifTypeEnum.EMAIL,
+        NotificationStatusEnum.REQUESTED);
 
     ArgumentCaptor<NotificationEntity> captor = ArgumentCaptor.forClass(NotificationEntity.class);
     verify(notificationRepository).save(captor.capture());
@@ -35,6 +43,7 @@ class CommonPersistanceServiceTest {
     NotificationEntity saved = captor.getValue();
     assertThat(saved.getNotificationId()).isEqualTo("req-1");
     assertThat(saved.getReferenceId()).isEqualTo("ref-abc");
+    assertThat(saved.getSentTo()).isEqualTo("alice@example.com");
     assertThat(saved.getType()).isEqualTo(NotifTypeEnum.EMAIL);
     assertThat(saved.getStatus()).isEqualTo(NotificationStatusEnum.REQUESTED);
     assertThat(saved.getRetryCount()).isEqualTo(1);
@@ -44,17 +53,28 @@ class CommonPersistanceServiceTest {
   void saveOrUpdateNotification_whenExistingRecord_shouldUpdateFields() {
     NotificationEntity existing =
         new NotificationEntity(
-            "req-1", "old-ref", NotifTypeEnum.EMAIL, NotificationStatusEnum.REQUESTED, 1);
+            "req-1",
+            "old-ref",
+            "old@example.com",
+            NotifTypeEnum.EMAIL,
+            NotificationStatusEnum.REQUESTED,
+            1);
     when(notificationRepository.findByID("req-1")).thenReturn(existing);
 
     commonPersistanceService.saveOrUpdateNotification(
-        "req-1", "new-ref", 2, NotifTypeEnum.EMAIL, NotificationStatusEnum.FAILED);
+        "req-1",
+        "new-ref",
+        "new@example.com",
+        2,
+        NotifTypeEnum.EMAIL,
+        NotificationStatusEnum.FAILED);
 
     ArgumentCaptor<NotificationEntity> captor = ArgumentCaptor.forClass(NotificationEntity.class);
     verify(notificationRepository).save(captor.capture());
 
     NotificationEntity saved = captor.getValue();
     assertThat(saved.getReferenceId()).isEqualTo("new-ref");
+    assertThat(saved.getSentTo()).isEqualTo("new@example.com");
     assertThat(saved.getRetryCount()).isEqualTo(2);
     assertThat(saved.getStatus()).isEqualTo(NotificationStatusEnum.FAILED);
   }
@@ -63,11 +83,16 @@ class CommonPersistanceServiceTest {
   void saveOrUpdateNotification_whenExistingRecord_shouldNotCreateNewInstance() {
     NotificationEntity existing =
         new NotificationEntity(
-            "req-1", "old-ref", NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED, 1);
+            "req-1",
+            "old-ref",
+            "+1111111111",
+            NotifTypeEnum.SMS,
+            NotificationStatusEnum.REQUESTED,
+            1);
     when(notificationRepository.findByID("req-1")).thenReturn(existing);
 
     commonPersistanceService.saveOrUpdateNotification(
-        "req-1", "new-ref", 2, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
+        "req-1", "new-ref", "+2222222222", 2, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
 
     ArgumentCaptor<NotificationEntity> captor = ArgumentCaptor.forClass(NotificationEntity.class);
     verify(notificationRepository).save(captor.capture());
@@ -81,7 +106,7 @@ class CommonPersistanceServiceTest {
     when(notificationRepository.findByID(any())).thenReturn(null);
 
     commonPersistanceService.saveOrUpdateNotification(
-        "req-1", "ref-1", 1, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
+        "req-1", "ref-1", "+1234567890", 1, NotifTypeEnum.SMS, NotificationStatusEnum.REQUESTED);
 
     verify(notificationRepository, times(1)).save(any(NotificationEntity.class));
   }
