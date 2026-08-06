@@ -60,8 +60,8 @@ ENV OTEL_SERVICE_NAME=herald \
     OTEL_JAVAAGENT_ENABLED=true \
     OTEL_METRICS_EXPORTER=otlp \
     OTEL_LOGS_EXPORTER=otlp \
-    OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp-gateway-prod-ap-south-1.grafana.net/otlp, \
-    OTEL_EXPORTER_OTLP_HEADERS=Authorization=Basic MTYxNzk3OTpnbGNfZXlKdklqb2lNVGMxTVRjd01TSXNJbTRpT2lKemRHRmpheTB4TmpFM09UYzVMVzkwYkhBdGQzSnBkR1V0ZEdWemRDSXNJbXNpT2lKdU5qTTNRbFUyTVhJeGRuRldZbVo1T0VaQ01UaG9PRzhpTENKdElqcDdJbklpT2lKd2NtOWtMV0Z3TFhOdmRYUm9MVEVpZlgwPQ==, \
+    OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp-gateway-prod-ap-south-1.grafana.net/otlp \
+    OTEL_EXPORTER_OTLP_HEADERS='Authorization=Basic MTYxNzk3OTpnbGNfZXlKdklqb2lNVGMxTVRjd01TSXNJbTRpT2lKemRHRmpheTB4TmpFM09UYzVMVzkwYkhBdGQzSnBkR1V0ZEdWemRDSXNJbXNpT2lKdU5qTTNRbFUyTVhJeGRuRldZbVo1T0VaQ01UaG9PRzhpTENKdElqcDdJbklpT2lKd2NtOWtMV0Z3TFhOdmRYUm9MVEVpZlgwPQ==' \
   
 
 # Container-aware heap sizing + fail fast on OOM. The JVM reads
