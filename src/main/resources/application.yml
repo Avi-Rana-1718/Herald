@@ -25,6 +25,8 @@ spring:
       ssl.truststore.type: PKCS12
       ssl.truststore.location: ${KAFKA_TRUSTSTORE_PATH}
       ssl.truststore.password: ${KAFKA_TRUSTSTORE_PASSWORD}
+      socket.connection.setup.timeout.ms: 30000
+      socket.connection.setup.timeout.max.ms: 60000
     consumer:
       group-id: my-consumer-group
       auto-offset-reset: latest
