@@ -104,6 +104,28 @@ TWILIO_PASSWORD=
 TWILIO_SERVICE_ID=
 ```
 
+That's the whole list for local development — the compose broker is plaintext and needs no Kafka credentials.
+
+> [!NOTE]
+> `KafkaTopicConfig` creates topics with replication factor 2, which the single-broker compose setup cannot honour. Spring logs the rejection and boots anyway; create the topics by hand if you need them locally.
+
+<details>
+<summary><b>Connecting to a secured (managed) Kafka broker</b></summary>
+
+Three extra variables, no profile and no cert file:
+
+```properties
+KAFKA_SECURITY_PROTOCOL=SASL_SSL
+KAFKA_USERNAME=
+KAFKA_PASSWORD=
+```
+
+`security.protocol` defaults to `PLAINTEXT`; flipping it to `SASL_SSL` activates the `SCRAM-SHA-256` config that is already in `application.yml`. The broker's CA is **inlined** there as `kafka.ssl.ca-pem` and fed to Kafka's PEM truststore (`ssl.truststore.type: PEM`), so there is no `.jks`/`.p12` to ship, no truststore password, and nothing to mount. It is a public CA certificate with no private key.
+
+Rotating the CA: replace the PEM block in `application.yml`, or override at runtime with `KAFKA_CA_PEM` (needs real newlines — trivial in a k8s ConfigMap, awkward in a `.properties` file). The bundled Aiven project CA expires **2036-07-30**.
+
+</details>
+
 ### 2. Infrastructure
 
 ```bash
@@ -254,8 +276,23 @@ src/main/java/com/notification/herald/
 
 ```bash
 docker build -t herald .
+
+docker run --rm -p 6069:6069 \
+  -e DB_URL=... \
+  -e KAFKA_BROKER_URL=... -e KAFKA_USERNAME=... -e KAFKA_PASSWORD=... \
+  -e KAFKA_TRUSTSTORE_PASSWORD=... \
+  -e MAILJET_APIKEY=... -e MAILJET_SECRET=... \
+  herald
+```
+
+The image defaults to `SPRING_PROFILES_ACTIVE=cloud` and supplies `KAFKA_TRUSTSTORE_PATH` itself — pass every other secret in individually rather than mounting the whole `.env`.
+
+```bash
 kubectl apply -f k8s/     # deployment, service, redis, sealed secret
 ```
+
+> [!WARNING]
+> The k8s manifests are incomplete: `k8s/deployment.yaml` injects no env and mounts no secrets, and the sealed secret carries only the Mailjet keys. A pod started from them cannot reach Kafka or PostgreSQL.
 
 ## 📚 Documentation
 

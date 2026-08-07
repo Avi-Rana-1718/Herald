@@ -32,3 +32,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Keys / keystores ###
+# certs/kafka.truststore.jks is deliberately tracked — public CA only, and the
+# image COPYs it in. Anything holding a private key stays out.
+*.p12
+*.key
+*.keystore.jks

@@ -42,6 +42,11 @@ USER spring:spring
 
 COPY --from=build --chown=spring:spring /workspace/otel-agent.jar /app/otel-agent.jar
 
+# Kafka broker CA is inlined in application.yml (PEM truststore), so there is
+# no keystore to COPY and no truststore password. Point the image at the managed
+# broker; KAFKA_BROKER_URL / KAFKA_USERNAME / KAFKA_PASSWORD come in at run time.
+ENV KAFKA_SECURITY_PROTOCOL=SASL_SSL
+
 # Copy layers least-changed -> most-changed for maximum cache hits.
 COPY --from=build --chown=spring:spring /workspace/extracted/dependencies/ ./
 COPY --from=build --chown=spring:spring /workspace/extracted/spring-boot-loader/ ./

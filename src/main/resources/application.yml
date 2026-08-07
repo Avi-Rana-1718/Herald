@@ -15,16 +15,21 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  # Security is env-driven. Defaults match the plaintext broker in
+  # docker-compose.yaml; the managed broker needs KAFKA_SECURITY_PROTOCOL=SASL_SSL
+  # plus KAFKA_USERNAME / KAFKA_PASSWORD. Under PLAINTEXT the SASL and SSL keys
+  # below are never read, so they are harmless to leave in place.
   kafka:
-    bootstrap-servers: ${KAFKA_BROKER_URL}
+    bootstrap-servers: ${KAFKA_BROKER_URL:localhost:9092}
     properties:
-      security.protocol: SASL_SSL
+      security.protocol: ${KAFKA_SECURITY_PROTOCOL:PLAINTEXT}
       ssl.endpoint.identification.algorithm: https
       sasl.mechanism: SCRAM-SHA-256
-      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USERNAME}" password="${KAFKA_PASSWORD}";
-      ssl.truststore.type: PKCS12
-      ssl.truststore.location: ${KAFKA_TRUSTSTORE_PATH}
-      ssl.truststore.password: ${KAFKA_TRUSTSTORE_PASSWORD}
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USERNAME:}" password="${KAFKA_PASSWORD:}";
+      # Broker CA inlined via Kafka's PEM store (2.7+): no keystore file to ship,
+      # no truststore password, nothing to mount. See kafka.ssl.ca-pem below.
+      ssl.truststore.type: PEM
+      ssl.truststore.certificates: ${KAFKA_CA_PEM:${kafka.ssl.ca-pem}}
       socket.connection.setup.timeout.ms: 30000
       socket.connection.setup.timeout.max.ms: 60000
     consumer:
@@ -43,6 +48,37 @@ management:
   health:
     redis:
       enabled: false
+kafka:
+  ssl:
+    # Aiven project CA. Public certificate, no private key — safe in source
+    # control and in the image. Consumed above as ssl.truststore.certificates,
+    # overridable at runtime with KAFKA_CA_PEM. Expires 2036-07-30.
+    ca-pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIERDCCAqygAwIBAgIUPEBgHB1rY7UqWNE/rPp+jQILoqkwDQYJKoZIhvcNAQEM
+      BQAwOjE4MDYGA1UEAwwvZjU4MTgzMjEtMDJjMC00OGJhLTkxODktNGUzNzMwNjg3
+      NWU3IFByb2plY3QgQ0EwHhcNMjYwODAyMDk0ODE5WhcNMzYwNzMwMDk0ODE5WjA6
+      MTgwNgYDVQQDDC9mNTgxODMyMS0wMmMwLTQ4YmEtOTE4OS00ZTM3MzA2ODc1ZTcg
+      UHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBALirbBDi
+      O6obc2pFY4V7e0iwikY+rjKtSX6Hw7+GaBrZsUcyLUGnh3XRwmMA0Pr9NAg5MfrJ
+      pmdrCw5XD6L5Fkep4O5JqnaeEifah7ljEPovBoHxXMshD8q4UmMGPtiiz8Ut8bdG
+      48x4DJWEz9CPxH6y2Sqvia5e7DNDFVSa5PnvbpYImpjPX1iC1RsScGMJFpGlSgnE
+      GHl2v4BkIt4rFKuWQtN1poTb0TD/gM6yTerQfbiktY89yrjSkFYUGNwmnLZlPx6f
+      h1/gCFmSHQW3qA6S3etZMpwt2FUDis51dJY/glD4tzVvhw1bZduRlWXtktVFwdyy
+      DhfZe1rA2/JQabPPrNCTk8Nzydip1ZV8ub1vykH1TIu+o1EEX7+LN4VZqrGWQ9Ol
+      hFw/jpyx2/4mKj0M6NaZnEKJ9p8I/E1HfcydDG9Wsv1t4hvCi+7Qw5kfdSnURvpn
+      YvEamhOx3bU5cU7VE9/Wg6TBn2mXXSTgFd1SDLaoxkiVjAXkqaEPmrLTVQIDAQAB
+      o0IwQDAdBgNVHQ4EFgQU543CMRXxHYQ+ACfWQnjcE+HKIQswEgYDVR0TAQH/BAgw
+      BgEB/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGBADTdhK/4ShBM
+      B7LyXqpdu8jQIhyFREaRs8NTSnLIo9zO4xEFIuJeV95IR7f7VxszQWKL7yPBOChC
+      BsUr321ezRp6NCkTC71x9gymk3pJhL7KW8dVwxrBALM2LKEngpiianL1l/xBs0ht
+      zDQnKRtkw2t2W+g+ueG5P1xI6TNsrZymExSqAOT6sHtNzFc6KY/xerYmtEPj9YyB
+      W61Nr2nft6SPUB/pqER4oPq2ZmweRQTYFT5x7PWLrGgyN6qZkRtXsYnSrbZnM9eE
+      bmcyBEKJU1TByhIuQ+hrfdL11TbVtiNFdculvUmTsRgmnFOc+t0hhJ0pfgX7KFpN
+      FZIV3Tn3xWz6CWNumvgKkopnX9m9WFdbTI9bjTE9SIMLOYTQH8tVwZSp/mW0Om2Q
+      sSRrmXYgqPMgcDoUaSRbD6H+ziwKjfcz2wtx50+N8z18c5rXvTonGnKZC/Iz8eS7
+      ErFpEYCfoYMmSA+lg09WVk5YSfD5QXaapTqOyouA5sy9BuV05L7Wwg==
+      -----END CERTIFICATE-----
 mail:
   mailjet:
     username: ${MAILJET_APIKEY}
